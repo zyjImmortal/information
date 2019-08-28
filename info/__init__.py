@@ -30,7 +30,9 @@ def create_app(config_name):
     db.init_app(app)
     mail.init_app(app)
     global redis_store
-    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT)
+    # decode_responses设置为True，自动将字节数据解析
+    redis_store = StrictRedis(host=config[config_name].REDIS_HOST,
+                              port=config[config_name].REDIS_PORT, decode_responses=True)
     Session(app)  # 指定session存储位置，
     # CSRFProtect(app)
 

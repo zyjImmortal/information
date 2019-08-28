@@ -126,11 +126,11 @@ $(function () {
         e.preventDefault();
 
         // 取到用户输入的内容
-        var mobile = $("#register_mobile").val();
-        var username = $("#register_username").val();
-        var email = $("#register_email").val();
-        var smscode = $("#smscode").val();
-        var password = $("#register_password").val();
+        let mobile = $("#register_mobile").val();
+        let username = $("#register_username").val();
+        let email = $("#register_email").val();
+        let smscode = $("#smscode").val();
+        let password = $("#register_password").val();
 
         if (!username) {
             $("#register-username-err").show();
@@ -157,16 +157,23 @@ $(function () {
         }
 
         // 发起注册请求
-
+        let params = {
+            "username":username,
+            "email":email,
+            "image_code":""
+        };
+        $.ajax({
+            url:""
+        })
     })
 });
 
-var imageCodeId = "";
+let imageCodeId = "";
 
 // TODO 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
 function generateImageCode() {
     imageCodeId = generateUUID();
-    var url = '/passport/image_code?imageCodeId=' + imageCodeId;
+    let url = '/passport/image_code?imageCodeId=' + imageCodeId;
     // 设置src属性，就会自动向这个url发送请求
     $(".get_pic_code").attr("src", url);
 }
@@ -175,15 +182,15 @@ function generateImageCode() {
 function sendSMSCode() {
     // 校验参数，保证输入框有数据填写
     $(".get_code").removeAttr("onclick");
-    var email = $("#register_email").val();
-    var username = $("#register_username").val();
+    let email = $("#register_email").val();
+    let username = $("#register_username").val();
     if (!email && !username) {
         $("#register-mobile-err").html("请填写正确的邮箱！");
         $("#register-mobile-err").show();
         $(".get_code").attr("onclick", "sendSMSCode();");
         return;
     }
-    var imageCode = $("#imagecode").val();
+    let imageCode = $("#imagecode").val();
     if (!imageCode) {
         $("#image-code-err").html("请填写验证码！");
         $("#image-code-err").show();
@@ -192,7 +199,37 @@ function sendSMSCode() {
     }
 
     // TODO 发送邮箱验证码
-
+    let params = {
+        "username":username,
+        "email":email,
+        "image_code":imageCode,
+        "image_code_id":imageCodeId
+    };
+    $.ajax({
+        url:"/passport/mail",
+        type:"post",
+        data:JSON.stringify(params),
+        contentType:"application/json",
+        success:function (response) {
+            if (response.errno === "0"){
+                let num = 60;
+                let t = setInterval(function () {
+                    if (num === 1){
+                        clearInterval(t);
+                        $(".get_code").html("点击获取验证码");
+                        $(".get_code").attr("onclick", "sendSMSCode();");
+                    } else{
+                        num -= 1;
+                        // 设置a标签显示的内容
+                        $(".get_code").html(num + "秒");
+                    }
+                })
+            } else {
+                alert(response.errmsg)
+                $(".get_code").attr("onclick", "sendSMSCode();");
+            }
+        }
+    })
 }
 
 // 调用该函数模拟点击左侧按钮
