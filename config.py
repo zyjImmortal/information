@@ -2,7 +2,7 @@ import logging
 
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = "mysql+cymysql://root:12345678@localhost:3306/information"
+    SQLALCHEMY_DATABASE_URI = "mysql+cymysql://zhouyajun:12345678@localhost:3306/information"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     REDIS_HOST = 'localhost'
     REDIS_PORT = 6379
