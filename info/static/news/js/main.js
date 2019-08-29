@@ -223,7 +223,7 @@ function sendSMSCode() {
                         // 设置a标签显示的内容
                         $(".get_code").html(num + "秒");
                     }
-                })
+                }, 1000)
             } else {
                 alert(response.errmsg)
                 $(".get_code").attr("onclick", "sendSMSCode();");
