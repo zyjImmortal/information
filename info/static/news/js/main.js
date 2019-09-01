@@ -34,15 +34,21 @@ $(function () {
         $("#register-password-err").hide();
     });
 
-
+    $('.form-group').on('click', function () {
+        $(this).children('input').focus();
+    });
+    $('.form-group input').on('focusin', function () {
+        $(this).siblings('.input_tip').animate({'top': -5, 'font-size': 12}, 'fast');
+        $(this).parent().addClass('hotline')
+    });
     // 点击输入框，提示文字上移
     // animate执行css属性，实现自定义动画，返回jQuery对象，siblings获取兄弟元素
-    $('.form_group').on('click focusin', function () {
-        $(this).children('.input_tip').animate({
-            'top': -5,
-            'font-size': 12
-        }, 'fast').siblings('input').parent().addClass('hotline');
-    });
+    // $('.form_group').on('click focusin', function () {
+    //     $(this).children('.input_tip').animate({
+    //         'top': -5,
+    //         'font-size': 12
+    //     }, 'fast').siblings('input').parent().addClass('hotline');
+    // });
 
     // 输入框失去焦点，如果输入框为空，则提示文字下移
     $('.form_group input').on('blur focusout', function () {
@@ -160,10 +166,24 @@ $(function () {
         let params = {
             "username":username,
             "email":email,
-            "image_code":""
+            "image_code":smscode,
+            "password":password
         };
+
         $.ajax({
-            url:""
+            url:"/passport/register",
+            type: "post",
+            ContentType: "application/json",
+            data:JSON.stringify(params),
+            success:function (response) {
+                if (response.errno == "0"){
+                //    注册成功
+                } else{
+                    alert(response.smg);
+                    $('#register-password-err').html(response.msg);
+                    $('#register-password-err').show();
+                }
+            }
         })
     })
 });

@@ -112,8 +112,10 @@ def registeV2():
     session['user_id'] = user.id
     session['nick_name'] = user.nick_name
     session['email'] = user.email
+    return jsonify(errno=RET.OK, msg="注册成功")
 
 
 @passport.route('/login', methods=['POST'])
 def login():
+    params_dict = request.json
     pass

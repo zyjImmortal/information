@@ -36,6 +36,8 @@ def create_app(config_name):
     Session(app)  # 指定session存储位置，
     # CSRFProtect(app)
 
+    # app.json_encoder
+
     from info.modules.index import index_blu
     from info.modules.passport import passport
     app.register_blueprint(index_blu)
